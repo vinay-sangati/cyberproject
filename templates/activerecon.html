@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .checkbox-group {
+            margin: 10px 0;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+
+
+<div class="container">
+    <h2>Active Reconnaissance</h2>
+    <form id="activeReconForm">
+        <label for="domain">Target Domain/IP:</label>
+        <input type="text" id="domain" name="domain" placeholder="Enter domain or IP" required>
+
+        <label for="port_range">Port Range:</label>
+        <input type="text" id="port_range" name="port_range" placeholder="e.g. 80, 443, 1-1024">
+
+        <label for="scan_type">Scan Type:</label>
+        <select id="scan_type" name="scan_type">
+            <option value="tcp_syn">TCP SYN Scan</option>
+            <option value="tcp_connect">TCP Connect Scan</option>
+            <option value="udp">UDP Scan</option>
+            <option value="ping">Ping Scan</option>
+        </select>
+
+        <div class="checkbox-group">
+            <label>Additional Options:</label><br>
+            <input type="checkbox" id="os_detection" name="os_detection">
+            <label for="os_detection">OS Detection</label><br>
+
+            <input type="checkbox" id="service_version" name="service_version">
+            <label for="service_version">Service Version Detection</label><br>
+
+            <input type="checkbox" id="vulnerability_scan" name="vulnerability_scan">
+            <label for="vulnerability_scan">Vulnerability Scan</label><br>
+
+            <input type="checkbox" id="traceroute" name="traceroute">
+            <label for="traceroute">Traceroute</label><br>
+
+            <input type="checkbox" id="ping_sweep" name="ping_sweep">
+            <label for="ping_sweep">Ping Sweep</label><br>
+
+            <input type="checkbox" id="fragmentation" name="fragmentation">
+            <label for="fragmentation">Packet Fragmentation</label><br>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result">
+        <h3>Scan Results:</h3>
+        <pre id="output"></pre>
+    </div>
+
+</div>
+<script>
+    document.getElementById('activeReconForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const payload = {
+            domain: formData.get('domain'),
+            port_range: formData.get('port_range'),
+            scan_type: formData.get('scan_type'),
+            os_detection: formData.has('os_detection'),
+            service_version: formData.has('service_version'),
+            vulnerability_scan: formData.has('vulnerability_scan'),
+            traceroute: formData.has('traceroute'),
+            ping_sweep: formData.has('ping_sweep'),
+            fragmentation: formData.has('fragmentation'),
+        };
+
+        fetch('/active-recon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
+        .then(response => response.json())
+        .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('result').style.display = 'block';
+                    document.getElementById('output').textContent = JSON.stringify(data.scan_results, null, 2);
+                    localStorage.setItem("active",JSON.stringify(data.scan_results));
+                } else {
+                    document.getElementById('output').textContent = `Error: ${data.message}`;
+                }
+            })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+
+<script>
+    fetch("nav.html")
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById("nav-placeholder").innerHTML = data;
+    });
+
+    window.onload = function() {
+        console.log("pm;pad")
+        const storedData = localStorage.getItem("passive");
+        if (storedData) {
+            const parsedResult = JSON.parse(storedData);
+            console.log(parsedResult.dns_records)
+            document.getElementById("domain").value =  parsedResult.dns_records[0];
+        } else {
+            document.getElementById("displayData").innerText = "No data found in localStorage!";
+        }
+    };
+</script>
+
+</body>
+</html>

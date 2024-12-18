@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penetration Testing Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h3 {
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        pre {
+            background: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .highlight {
+            background-color: #ffefc1;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Penetration Testing Report</h1>
+
+    <!-- Active Scan Section -->
+    <div class="section">
+        <h2>Active Scan</h2>
+        <h3>Command:</h3>
+        <pre>nmap -oX - -p 1-1024 -sS -O 45.33.32.156</pre>
+
+        <h3>Scan Info:</h3>
+        <table>
+            <tr>
+                <th>Method</th>
+                <th>Services</th>
+                <th>Total Hosts</th>
+                <th>Up Hosts</th>
+                <th>Down Hosts</th>
+                <th>Elapsed Time</th>
+                <th>Time</th>
+            </tr>
+            <tr>
+                <td>Syn</td>
+                <td>1-1024</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0</td>
+                <td>12.38 seconds</td>
+                <td>Thu Oct 24 00:40:12 2024</td>
+            </tr>
+        </table>
+
+        <h3>OS Match:</h3>
+        <ul>
+            <li>Oracle Virtualbox (Accuracy: 95%)</li>
+            <li>QEMU User Mode Network Gateway (Accuracy: 92%)</li>
+        </ul>
+
+        <h3>Open Ports:</h3>
+        <table>
+            <tr>
+                <th>Port</th>
+                <th>State</th>
+                <th>Service</th>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>Open</td>
+                <td>SSH</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Enum Section -->
+    <div class="section">
+        <h2>Enumeration</h2>
+        <h3>Host Details:</h3>
+        <table>
+            <tr>
+                <th>Host</th>
+                <th>Hostname</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>45.33.32.156</td>
+                <td>scanme.nmap.org</td>
+                <td class="highlight">Up (Reason: Reset)</td>
+            </tr>
+        </table>
+
+        <h3>Open Services:</h3>
+        <table>
+            <tr>
+                <th>Port</th>
+                <th>Service</th>
+                <th>State</th>
+                <th>Reason</th>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>SSH</td>
+                <td>Open</td>
+                <td>syn-ack</td>
+            </tr>
+            <tr>
+                <td>80</td>
+                <td>HTTP</td>
+                <td>Open</td>
+                <td>syn-ack</td>
+            </tr>
+            <tr>
+                <td>9929</td>
+                <td>Nping-echo</td>
+                <td>Open</td>
+                <td>syn-ack</td>
+            </tr>
+            <tr>
+                <td>31337</td>
+                <td>Elite</td>
+                <td>Open</td>
+                <td>syn-ack</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Vulnerability Scan Section -->
+    <div class="section">
+        <h2>Vulnerability Scan</h2>
+        <h3>Command:</h3>
+        <pre>nmap -oX - -sV --script vuln 45.33.32.156</pre>
+        <h3>Scan Details:</h3>
+        <p>Details of vulnerable services or ports found during the scan (Expand based on actual results).</p>
+    </div>
+
+    <!-- Post Exploitation Section -->
+    <div class="section">
+        <h2>Post Exploitation</h2>
+        <h3>Result:</h3>
+        <pre>User created and command executed successfully. Output: test</pre>
+    </div>
+
+    <!-- Cover Tracks Section -->
+    <div class="section">
+        <h2>Cover Tracks</h2>
+        <h3>Status:</h3>
+        <pre>Logs and history cleared successfully.</pre>
+    </div>
+
+    <!-- Passive Scan Section -->
+    <div class="section">
+        <h2>Passive Scan</h2>
+        <h3>Whois Info:</h3>
+        <pre>WHOIS lookup failed: module 'whois' has no attribute 'whois'</pre>
+    </div>
+</div>
+
+</body>
+</html>

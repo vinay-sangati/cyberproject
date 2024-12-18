@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"], input[type="email"], select {
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    input[type="checkbox"] {
+        margin-right: 10px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    .form-group-inline {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .form-group-inline div {
+        width: 48%;
+    }
+
+    button {
+        padding: 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #218838;
+    }
+
+    #result {
+        margin-top: 30px;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        color: #333;
+    }
+</style>
+<body>
+
+    <div id="nav-placeholder"></div>
+
+<div class="container">
+    <h1>Passive Recon Tool</h1>
+    <form id="reconForm">
+        <div class="form-group">
+            <label for="domain">Domain Name</label>
+            <input type="text" id="domain" name="domain" placeholder="example.com" required>
+        </div>
+
+        <div class="form-group-inline">
+            <div class="form-group">
+                <label for="ip">IP Address (optional)</label>
+                <input type="text" id="ip" name="ip" placeholder="192.168.1.1">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address (optional)</label>
+                <input type="email" id="email" name="email" placeholder="example@example.com">
+            </div>
+        </div>
+
+        <div class="form-group-inline">
+            <div class="form-group">
+                <label for="whois">Perform WHOIS Lookup?</label>
+                <input type="checkbox" id="whois" name="whois">
+            </div>
+            <div class="form-group">
+                <label for="dns">Check DNS Records?</label>
+                <input type="checkbox" id="dns" name="dns">
+            </div>
+        </div>
+
+        <div class="form-group-inline">
+            <div class="form-group">
+                <label for="social_media">Social Media Lookup?</label>
+                <input type="checkbox" id="social_media" name="social_media">
+            </div>
+            <div class="form-group">
+                <label for="email_enum">Email Enumeration?</label>
+                <input type="checkbox" id="email_enum" name="email_enum">
+            </div>
+        </div>
+
+        <button type="submit">Start Recon</button>
+    </form>
+
+    <div id="result"></div>
+</div>    
+
+
+
+
+<script>
+    fetch("nav.html")
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById("nav-placeholder").innerHTML = data;
+    });
+
+    function storeData() {
+        const data = document.getElementById("result").value;
+        localStorage.setItem("payload", data);
+        alert("Data stored in localStorage!");
+    }
+
+    const form = document.getElementById('reconForm');
+
+form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    // Get form data
+    const formData = new FormData(form);
+    const payload = {
+        domain: formData.get('domain'),
+        ip: formData.get('ip') || null,
+        email: formData.get('email') || null,
+        whois: formData.get('whois') ? true : false,
+        dns: formData.get('dns') ? true : false,
+        social_media: formData.get('social_media') ? true : false,
+        email_enum: formData.get('email_enum') ? true : false
+    };
+
+    // Send data to backend
+    try {
+        const response = await fetch('/passive-recon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+        document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        localStorage.setItem("passive",JSON.stringify(result));
+    } catch (error) {
+        document.getElementById('result').innerText = 'Error: ' + error.message;
+    }
+});
+    </script>
+
+
+</body>
+</html>

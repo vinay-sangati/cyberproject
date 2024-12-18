@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title><style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .checkbox-group {
+            margin: 10px 0;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<script>
+    fetch("nav.html")
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+
+<div class="container">
+
+    <h2>Nmap Enumeration Tool</h2>
+    <form id="enumerationForm">
+        <label for="target">Target IP or Domain:</label>
+        <input type="text" id="target" required>
+
+        <label for="portRange">Port Range (e.g., 1-1000):</label>
+        <input type="text" id="portRange">
+
+        <label for="specificPorts">Specific Ports (comma-separated):</label>
+        <input type="text" id="specificPorts">
+
+        <label for="scanType">Select Scan Type:</label>
+        <select id="scanType" required>
+            <option value="service">Service Version Detection</option>
+            <option value="os">OS Detection</option>
+            <option value="dns">DNS Enumeration</option>
+            <option value="smb">SMB Enumeration</option>
+            <option value="snmp">SNMP Enumeration</option>
+            <option value="ldap">LDAP Enumeration</option>
+            <option value="http">HTTP Enumeration</option>
+        </select>
+
+        <label for="scripts">Custom NSE Scripts (comma-separated):</label>
+        <input type="text" id="scripts">
+
+        <label for="timeout">Timeout (seconds):</label>
+        <input type="text" id="timeout">
+
+        <label for="outputFormat">Output Format:</label>
+        <select id="outputFormat">
+            <option value="normal">Normal</option>
+            <option value="xml">XML</option>
+            <option value="json">JSON</option>
+        </select>
+
+        <button type="submit">Start Enumeration</button>
+    </form>
+
+    <div id="result">
+        <h3>Scan Results:</h3>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        document.getElementById('enumerationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const payload = {
+                target: document.getElementById('target').value,
+                portRange: document.getElementById('portRange').value,
+                specificPorts: document.getElementById('specificPorts').value,
+                scanType: document.getElementById('scanType').value,
+                scripts: document.getElementById('scripts').value,
+                timeout: document.getElementById('timeout').value,
+                outputFormat: document.getElementById('outputFormat').value
+            };
+
+            fetch('/enumeration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('result').style.display = 'block';
+                    document.getElementById('output').textContent = JSON.stringify(data.scan_results, null, 2);
+                    localStorage.setItem("enum",JSON.stringify(data.scan_results));
+                } else {
+                    document.getElementById('output').textContent = `Error: ${data.message}`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+
+</div>
+</body>
+</html>

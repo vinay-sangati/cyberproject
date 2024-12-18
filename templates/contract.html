@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penetration Testing Details</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"], input[type="url"], input[type="email"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .button {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .button:hover {
+            background-color: #218838;
+        }
+
+        .domain-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .domain-input input[type="url"] {
+            flex: 1;
+        }
+
+        .add-domain {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-domain:hover {
+            background-color: #0056b3;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Penetration Testing Form</h2>
+    <form id="pentestForm">
+        <label for="companyName">Company Name:</label>
+        <input type="text" id="companyName" name="companyName" placeholder="Enter company name" required>
+
+        <label for="contactPerson">Contact Person:</label>
+        <input type="text" id="contactPerson" name="contactPerson" placeholder="Enter contact person" required>
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" placeholder="Enter email address" required>
+
+        <label for="description">Description of Scope:</label>
+        <textarea id="description" name="description" placeholder="Describe the scope of the penetration test" required></textarea>
+
+        <h3>Domain Details</h3>
+
+        <div class="domain-input">
+            <input type="url" id="domain1" name="domains[]" placeholder="Enter domain URL" required>
+            <button type="button" class="add-domain" onclick="addDomainInput()">Add Domain</button>
+        </div>
+
+        <div id="extraDomains"></div>
+
+        <button type="submit" class="button">Submit Details</button>
+    </form>
+</div>
+
+<script>
+    function addDomainInput() {
+        const extraDomains = document.getElementById('extraDomains');
+        const domainInput = document.createElement('div');
+        domainInput.classList.add('domain-input');
+        domainInput.innerHTML = `<input type="url" name="domains[]" placeholder="Enter domain URL" required>`;
+        extraDomains.appendChild(domainInput);
+    }
+</script>
+
+</body>
+</html>

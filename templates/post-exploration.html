@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Exploitation</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="password"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<script>
+    fetch("nav.html")
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+
+<div class="container">
+    <form id="postExploitForm">
+        <label for="ip">Target IP Address:</label>
+        <input type="text" id="ip" required><br>
+
+        <label for="port">Target Port:</label>
+        <input type="number" id="port" required><br>
+
+        <label for="username">SSH Username:</label>
+        <input type="text" id="username" required><br>
+
+        <label for="command">Command to Execute:</label>
+        <input type="text" id="command" required><br>
+
+        <label for="passwords">Passwords (comma-separated):</label>
+        <input type="text" id="passwords" required><br>
+
+        <label for="newUsername">New Username:</label>
+        <input type="text" id="newUsername" required><br>
+
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword" required><br>
+
+        <button type="submit">Execute Command</button>
+    </form>
+
+    <div id="result">
+        <h3>Execution Results:</h3>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        document.getElementById('postExploitForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const payload = {
+                ip: document.getElementById('ip').value,
+                port: document.getElementById('port').value,
+                username: document.getElementById('username').value,
+                command: document.getElementById('command').value,
+                passwords: document.getElementById('passwords').value.split(','),
+                newUsername: document.getElementById('newUsername').value,
+                newPassword: document.getElementById('newPassword').value
+            };
+
+            fetch('/execute-command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                localStorage.setItem("post-explo",JSON.stringify(JSON.stringify(data, null, 2)));
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>

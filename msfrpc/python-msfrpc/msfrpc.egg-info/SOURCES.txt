@@ -1,0 +1,10 @@
+LICENSE.txt
+PKG-INFO
+README
+msfrpc.py
+setup.py
+examples/test.py
+msfrpc.egg-info/PKG-INFO
+msfrpc.egg-info/SOURCES.txt
+msfrpc.egg-info/dependency_links.txt
+msfrpc.egg-info/top_level.txt
